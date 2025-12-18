@@ -1,0 +1,3 @@
+# Place one image URL per line, e.g.
+# https://example.com/image1.jpg
+# https://example.com/image2.png

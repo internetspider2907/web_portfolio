@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-grid">
+  <div class="profile-card">
+    <div class="profile-desc">
+      <div class="profile-img-wrap">
+        <img src="/media/profile/ib_p.jpg" alt="Profile" class="profile-img fade-up">
+      </div>
+      <h1 class="text-glow">hello im Ibrahim Abdulsalam and welcome to my portfolio.</h1>
+      <p class="lead">I'm a Python-focused full-stack web developer specializing in building robust, scalable web applications using the Django framework. With expertise spanning both front-end and back-end development, I create comprehensive digital solutions that prioritize performance, security, and user experience.
+My technical foundation centers on Python and Django, where I leverage the framework's powerful capabilities to architect RESTful APIs, implement complex business logic, and design efficient database schemas. I'm proficient in integrating Django with modern front-end technologies, creating seamless connections between server-side functionality and responsive, intuitive user interfaces.
+On the front-end, I work with JavaScript, HTML5, and CSS3, along with frameworks like React or Vue.js, to build dynamic, interactive experiences. I'm experienced in implementing Django's templating system and understand how to optimize the interplay between Django's MVT architecture and contemporary front-end patterns.
+My development approach emphasizes clean, maintainable code, following best practices including test-driven development, version control with Git, and agile methodologies. I'm comfortable working with PostgreSQL, MySQL, and other databases, and have experience deploying applications to cloud platforms like AWS, Heroku, or DigitalOcean.
+Whether building e-commerce platforms, content management systems, or custom web applications, I focus on delivering solutions that are not only technically sound but also aligned with business objectives and user needs.</p>
+    </div>
+  </div>
+
+  <div class="gallery">
+    <h3>Works</h3>
+    <div class="row">
+      {% for img in images %}
+      <div class="col-6 col-md-4 mb-3">
+        <div class="card work-card fade-up">
+          <img src="{{ img.image.url }}" class="card-img-top" alt="{{ img.title }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ img.id }}" style="cursor:pointer;">
+          <div class="card-body">
+            <h6 class="card-title">{{ img.title }}</h6>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteModal{{ img.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ img.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content glass">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel{{ img.id }}">Delete Work</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete "{{ img.title }}"?</p>
+              <form method="post" action="{% url 'delete_work' img.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="password{{ img.id }}">Password:</label>
+                  <input type="password" name="password" id="password{{ img.id }}" class="form-control" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-muted">No works uploaded yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content glass">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Upload Work</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.title.label_tag }}
+            {{ form.title }}
+          </div>
+          <div class="mb-3">
+            {{ form.image.label_tag }}
+            {{ form.image }}
+          </div>
+          <div class="mb-3">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
